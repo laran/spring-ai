@@ -141,7 +141,7 @@ TIP: All properties prefixed with `spring.ai.ollama.chat.options` can be overrid
 
 The https://github.com/spring-projects/spring-ai/blob/main/models/spring-ai-ollama/src/main/java/org/springframework/ai/ollama/api/OllamaOptions.java[OllamaOptions.java] class provides model configurations, such as the model to use, the temperature,  etc.
 
-On start-up, the default options can be configured with the `OllamaChatModel(api, options)` constructor or the `spring.ai.ollama.chat.options.*` properties.
+On start-up, the default options can be configured with the `spring.ai.ollama.chat.options.*` properties.
 
 At run-time, you can override the default options by adding new, request-specific options to the `Prompt` call.
 For example, to override the default model and temperature for a specific request:

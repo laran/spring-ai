@@ -228,7 +228,8 @@ public final class DefaultToolCallingManager implements ToolCallingManager {
 						"Tool call arguments are null or empty for tool: {}. This typically indicates incomplete "
 								+ "tool call aggregation in streaming mode. Surfacing as a tool error response.",
 						toolName);
-				ToolExecutionException ex = new ToolExecutionException(toolCallback.getToolDefinition(),
+				String callerAgentId = (String) toolContext.getContext().get(ToolContext.TOOL_CALLER_AGENT_ID);
+				ToolExecutionException ex = new ToolExecutionException(toolCallback.getToolDefinition(), callerAgentId,
 						new IllegalArgumentException("Tool call arguments were null or empty; the tool was not "
 								+ "invoked. This usually indicates a malformed or incomplete tool invocation "
 								+ "from the model (for example, truncated or unparseable streaming arguments)."));

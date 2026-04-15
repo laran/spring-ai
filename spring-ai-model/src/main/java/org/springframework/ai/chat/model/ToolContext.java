@@ -50,6 +50,14 @@ public final class ToolContext {
 	 */
 	public static final String TOOL_CALL_HISTORY = "TOOL_CALL_HISTORY";
 
+	/**
+	 * The key for the calling agent's identity stored in the context map. When present,
+	 * this value is included in
+	 * {@link org.springframework.ai.tool.execution.ToolExecutionException} to enable
+	 * per-agent attribution of tool-call failures in multi-agent deployments.
+	 */
+	public static final String TOOL_CALLER_AGENT_ID = "TOOL_CALLER_AGENT_ID";
+
 	private final Map<String, Object> context;
 
 	/**

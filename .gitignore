@@ -1,6 +1,7 @@
 .checkstyle
 target
 .classpath
+.factorypath
 .project
 .settings
 .env

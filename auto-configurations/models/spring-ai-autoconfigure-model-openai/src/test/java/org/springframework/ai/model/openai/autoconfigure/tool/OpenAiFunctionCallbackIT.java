@@ -31,33 +31,27 @@ import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.model.Generation;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.model.openai.autoconfigure.OpenAiChatAutoConfiguration;
-import org.springframework.ai.model.tool.autoconfigure.ToolCallingAutoConfiguration;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
-import org.springframework.ai.openai.api.OpenAiApi.ChatModel;
-import org.springframework.ai.retry.autoconfigure.SpringAiRetryAutoConfiguration;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.function.FunctionToolCallback;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
-import org.springframework.boot.restclient.autoconfigure.RestClientAutoConfiguration;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
-import org.springframework.boot.webclient.autoconfigure.WebClientAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@EnabledIfEnvironmentVariable(named = "OPENAI_API_KEY", matches = ".+")
+@EnabledIfEnvironmentVariable(named = "OPENAI_API_KEY", matches = ".*")
 public class OpenAiFunctionCallbackIT {
 
 	private final Logger logger = LoggerFactory.getLogger(OpenAiFunctionCallbackIT.class);
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
 		.withPropertyValues("spring.ai.openai.apiKey=" + System.getenv("OPENAI_API_KEY"),
-				"spring.ai.openai.chat.options.model=" + ChatModel.GPT_4_O_MINI.getName())
-		.withConfiguration(AutoConfigurations.of(OpenAiChatAutoConfiguration.class, RestClientAutoConfiguration.class,
-				SpringAiRetryAutoConfiguration.class, ToolCallingAutoConfiguration.class,
-				WebClientAutoConfiguration.class))
+				"spring.ai.openai.chat.options.model=" + "gpt-4o-mini")
+		.withConfiguration(AutoConfigurations.of(OpenAiChatAutoConfiguration.class,
+				org.springframework.ai.model.tool.autoconfigure.ToolCallingAutoConfiguration.class))
 		.withUserConfiguration(Config.class);
 
 	@Test
@@ -66,7 +60,8 @@ public class OpenAiFunctionCallbackIT {
 
 			OpenAiChatModel chatModel = context.getBean(OpenAiChatModel.class);
 
-			UserMessage userMessage = new UserMessage("What's the weather like in San Francisco, Tokyo, and Paris?");
+			UserMessage userMessage = new UserMessage(
+					"What's the weather like in San Francisco, Tokyo, and Paris? Please use the provided tools to get the weather for all 3 cities.");
 
 			ChatResponse response = chatModel
 				.call(new Prompt(List.of(userMessage), OpenAiChatOptions.builder().toolNames("WeatherInfo").build()));
@@ -85,7 +80,7 @@ public class OpenAiFunctionCallbackIT {
 			OpenAiChatModel chatModel = context.getBean(OpenAiChatModel.class);
 
 			UserMessage userMessage = new UserMessage(
-					"What's the weather like in San Francisco, Tokyo, and Paris? You can call the following functions 'WeatherInfo'");
+					"What's the weather like in San Francisco, Tokyo, and Paris? Please use the provided tools to get the weather for all 3 cities. You can call the following functions 'WeatherInfo'");
 
 			Flux<ChatResponse> response = chatModel
 				.stream(new Prompt(List.of(userMessage), OpenAiChatOptions.builder().toolNames("WeatherInfo").build()));

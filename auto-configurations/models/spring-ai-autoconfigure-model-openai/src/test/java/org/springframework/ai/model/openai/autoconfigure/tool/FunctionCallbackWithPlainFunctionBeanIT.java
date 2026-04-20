@@ -41,32 +41,26 @@ import org.springframework.ai.chat.model.ToolContext;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.model.openai.autoconfigure.OpenAiChatAutoConfiguration;
 import org.springframework.ai.model.tool.ToolCallingChatOptions;
-import org.springframework.ai.model.tool.autoconfigure.ToolCallingAutoConfiguration;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
-import org.springframework.ai.openai.api.OpenAiApi.ChatModel;
-import org.springframework.ai.retry.autoconfigure.SpringAiRetryAutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
-import org.springframework.boot.restclient.autoconfigure.RestClientAutoConfiguration;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
-import org.springframework.boot.webclient.autoconfigure.WebClientAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Description;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@EnabledIfEnvironmentVariable(named = "OPENAI_API_KEY", matches = ".+")
+@EnabledIfEnvironmentVariable(named = "OPENAI_API_KEY", matches = ".*")
 class FunctionCallbackWithPlainFunctionBeanIT {
 
 	private static final Logger logger = LoggerFactory.getLogger(FunctionCallbackWithPlainFunctionBeanIT.class);
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
 		.withPropertyValues("spring.ai.openai.apiKey=" + System.getenv("OPENAI_API_KEY"),
-				"spring.ai.openai.chat.options.model=" + ChatModel.GPT_4_O_MINI.getName())
-		.withConfiguration(AutoConfigurations.of(OpenAiChatAutoConfiguration.class, RestClientAutoConfiguration.class,
-				SpringAiRetryAutoConfiguration.class, ToolCallingAutoConfiguration.class,
-				WebClientAutoConfiguration.class))
+				"spring.ai.openai.chat.options.model=" + "gpt-4o-mini")
+		.withConfiguration(AutoConfigurations.of(OpenAiChatAutoConfiguration.class,
+				org.springframework.ai.model.tool.autoconfigure.ToolCallingAutoConfiguration.class))
 		.withUserConfiguration(Config.class);
 
 	private static Map<String, Object> feedback = new ConcurrentHashMap<>();
@@ -179,7 +173,8 @@ class FunctionCallbackWithPlainFunctionBeanIT {
 
 			ChatClient chatClient = ChatClient.builder(chatModel).build();
 
-			String content = chatClient.prompt("What's the weather like in San Francisco, Tokyo, and Paris?")
+			String content = chatClient.prompt(
+					"What's the weather like in San Francisco, Tokyo, and Paris? Please use the provided tools to get the weather for all 3 cities.")
 				.toolNames("weatherFunctionWithContext")
 				.toolContext(Map.of("sessionId", "123"))
 				.call()
@@ -188,7 +183,7 @@ class FunctionCallbackWithPlainFunctionBeanIT {
 
 			// Test weatherFunction
 			UserMessage userMessage = new UserMessage(
-					"What's the weather like in San Francisco, Tokyo, and Paris? You can call the following functions 'weatherFunction'");
+					"What's the weather like in San Francisco, Tokyo, and Paris? Please use the provided tools to get the weather for all 3 cities. You can call the following functions 'weatherFunction'");
 
 			ChatResponse response = chatModel.call(new Prompt(List.of(userMessage),
 					OpenAiChatOptions.builder()
@@ -211,7 +206,8 @@ class FunctionCallbackWithPlainFunctionBeanIT {
 
 			ChatClient chatClient = ChatClient.builder(chatModel).build();
 
-			String content = chatClient.prompt("What's the weather like in San Francisco, Tokyo, and Paris?")
+			String content = chatClient.prompt(
+					"What's the weather like in San Francisco, Tokyo, and Paris? Please use the provided tools to get the weather for all 3 cities.")
 				.toolNames("weatherFunctionWithClassBiFunction")
 				.toolContext(Map.of("sessionId", "123"))
 				.call()
@@ -220,7 +216,7 @@ class FunctionCallbackWithPlainFunctionBeanIT {
 
 			// Test weatherFunction
 			UserMessage userMessage = new UserMessage(
-					"What's the weather like in San Francisco, Tokyo, and Paris? You can call the following functions 'weatherFunction'");
+					"What's the weather like in San Francisco, Tokyo, and Paris? Please use the provided tools to get the weather for all 3 cities. You can call the following functions 'weatherFunction'");
 
 			ChatResponse response = chatModel.call(new Prompt(List.of(userMessage),
 					OpenAiChatOptions.builder()
@@ -243,7 +239,7 @@ class FunctionCallbackWithPlainFunctionBeanIT {
 
 			// Test weatherFunction
 			UserMessage userMessage = new UserMessage(
-					"What's the weather like in San Francisco, Tokyo, and Paris? You can call the following functions 'weatherFunction'");
+					"What's the weather like in San Francisco, Tokyo, and Paris? Please use the provided tools to get the weather for all 3 cities. You can call the following functions 'weatherFunction'");
 
 			ChatResponse response = chatModel.call(
 					new Prompt(List.of(userMessage), OpenAiChatOptions.builder().toolNames("weatherFunction").build()));
@@ -270,7 +266,8 @@ class FunctionCallbackWithPlainFunctionBeanIT {
 			OpenAiChatModel chatModel = context.getBean(OpenAiChatModel.class);
 
 			// Test weatherFunction
-			UserMessage userMessage = new UserMessage("What's the weather like in San Francisco, Tokyo, and Paris?");
+			UserMessage userMessage = new UserMessage(
+					"What's the weather like in San Francisco, Tokyo, and Paris? Please use the provided tools to get the weather for all 3 cities.");
 
 			ToolCallingChatOptions functionOptions = ToolCallingChatOptions.builder()
 				.toolNames("weatherFunction")
@@ -292,7 +289,7 @@ class FunctionCallbackWithPlainFunctionBeanIT {
 
 			// Test weatherFunction
 			UserMessage userMessage = new UserMessage(
-					"What's the weather like in San Francisco, Tokyo, and Paris? You can call the following functions 'weatherFunction'");
+					"What's the weather like in San Francisco, Tokyo, and Paris? Please use the provided tools to get the weather for all 3 cities. You can call the following functions 'weatherFunction'");
 
 			Flux<ChatResponse> response = chatModel.stream(
 					new Prompt(List.of(userMessage), OpenAiChatOptions.builder().toolNames("weatherFunction").build()));
@@ -323,7 +320,7 @@ class FunctionCallbackWithPlainFunctionBeanIT {
 				.collect(Collectors.joining());
 			logger.info("Response: {}", content);
 
-			assertThat(content).withFailMessage("Content returned from OpenAI model is empty").isNotEmpty();
+			assertThat(content).isNotEmpty().withFailMessage("Content returned from OpenAI model is empty");
 			assertThat(content).contains("30", "10", "15");
 
 		});

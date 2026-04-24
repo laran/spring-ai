@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.jspecify.annotations.Nullable;
 import software.amazon.awssdk.core.document.Document;
 
 import org.springframework.ai.chat.prompt.ChatOptions;
@@ -42,8 +43,8 @@ public final class ConverseApiUtils {
 	private ConverseApiUtils() {
 	}
 
-	public static Document getChatOptionsAdditionalModelRequestFields(ChatOptions defaultOptions,
-			ModelOptions promptOptions) {
+	public static @Nullable Document getChatOptionsAdditionalModelRequestFields(@Nullable ChatOptions defaultOptions,
+			@Nullable ModelOptions promptOptions) {
 		if (defaultOptions == null && promptOptions == null) {
 			return null;
 		}
@@ -79,6 +80,22 @@ public final class ConverseApiUtils {
 		attributes.remove("stopSequences");
 		attributes.remove("maxTokens");
 		attributes.remove("topP");
+
+		attributes.remove("frequencyPenalty");
+		attributes.remove("presencePenalty");
+		attributes.remove("cacheOptions");
+		attributes.remove("outputSchema");
+
+		if (attributes.containsKey("requestParameters")) {
+			Object reqMap = attributes.remove("requestParameters");
+			if (reqMap instanceof Map map) {
+				attributes.putAll(map);
+			}
+		}
+
+		if (attributes.isEmpty()) {
+			return null;
+		}
 
 		return convertObjectToDocument(attributes);
 	}

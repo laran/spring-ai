@@ -69,15 +69,10 @@
 	<!-- This list will gradually shrink as we migrate to JSpecify -->
 	<suppress files="auto-configurations[\\/]models[\\/]spring-ai-autoconfigure-model-" id="bannedNullabilityImports" />
 
-	<suppress files="models[\\/]spring-ai-azure-openai" id="bannedNullabilityImports" />
-	<suppress files="models[\\/]spring-ai-bedrock" id="bannedNullabilityImports" />
-	<suppress files="models[\\/]spring-ai-bedrock-converse" id="bannedNullabilityImports" />
 	<suppress files="models[\\/]spring-ai-elevenlabs" id="bannedNullabilityImports" />
 	<suppress files="models[\\/]spring-ai-google-genai" id="bannedNullabilityImports" />
 	<suppress files="models[\\/]spring-ai-google-genai-embedding" id="bannedNullabilityImports" />
 	<suppress files="models[\\/]spring-ai-minimax" id="bannedNullabilityImports" />
-	<suppress files="models[\\/]spring-ai-mistral-ai" id="bannedNullabilityImports" />
-	<suppress files="models[\\/]spring-ai-openai" id="bannedNullabilityImports" />
 	<suppress files="models[\\/]spring-ai-transformers" id="bannedNullabilityImports" />
 	<suppress files="models[\\/]spring-ai-vertex-ai-embedding" id="bannedNullabilityImports" />
 

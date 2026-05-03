@@ -105,7 +105,6 @@ import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.content.Media;
 import org.springframework.ai.model.ModelOptionsUtils;
 import org.springframework.ai.model.tool.DefaultToolExecutionEligibilityPredicate;
-import org.springframework.ai.model.tool.ToolCallingChatOptions;
 import org.springframework.ai.model.tool.ToolCallingManager;
 import org.springframework.ai.model.tool.ToolExecutionEligibilityPredicate;
 import org.springframework.ai.model.tool.ToolExecutionResult;
@@ -287,20 +286,6 @@ public class BedrockProxyChatModel implements ChatModel {
 	@Override
 	public ChatOptions getDefaultOptions() {
 		return this.defaultOptions;
-	}
-
-	Prompt buildRequestPrompt(Prompt prompt) {
-		BedrockChatOptions.Builder requestBuilder = this.defaultOptions.mutate();
-
-		if (prompt.getOptions() != null) {
-			requestBuilder.combineWith(prompt.getOptions().mutate());
-		}
-
-		BedrockChatOptions requestOptions = requestBuilder.build();
-
-		ToolCallingChatOptions.validateToolCallbacks(requestOptions.getToolCallbacks());
-
-		return prompt.mutate().chatOptions(requestOptions).build();
 	}
 
 	ConverseRequest createRequest(Prompt prompt) {
@@ -988,12 +973,12 @@ public class BedrockProxyChatModel implements ChatModel {
 			return this;
 		}
 
-		public Builder bedrockRuntimeClient(BedrockRuntimeClient bedrockRuntimeClient) {
+		public Builder bedrockRuntimeClient(@Nullable BedrockRuntimeClient bedrockRuntimeClient) {
 			this.bedrockRuntimeClient = bedrockRuntimeClient;
 			return this;
 		}
 
-		public Builder bedrockRuntimeAsyncClient(BedrockRuntimeAsyncClient bedrockRuntimeAsyncClient) {
+		public Builder bedrockRuntimeAsyncClient(@Nullable BedrockRuntimeAsyncClient bedrockRuntimeAsyncClient) {
 			this.bedrockRuntimeAsyncClient = bedrockRuntimeAsyncClient;
 			return this;
 		}

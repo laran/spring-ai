@@ -142,6 +142,7 @@ import org.springframework.web.client.RestClientException;
  * @author Jihoon Kim
  * @author Soby Chacko
  * @author Sun Yuhan
+ * @author Thomas Vitale
  * @since 1.0.0
  */
 public class BedrockProxyChatModel implements ChatModel {
@@ -481,8 +482,10 @@ public class BedrockProxyChatModel implements ChatModel {
 			.topP(updatedRuntimeOptions.getTopP() != null ? updatedRuntimeOptions.getTopP().floatValue() : null)
 			.build();
 
+		BedrockChatOptions bedrockOptions = (BedrockChatOptions) prompt.getOptions();
+		Assert.notNull(bedrockOptions, "options can't be null here");
 		Document additionalModelRequestFields = ConverseApiUtils
-			.getChatOptionsAdditionalModelRequestFields(this.defaultOptions, prompt.getOptions());
+			.convertObjectToDocument(bedrockOptions.getRequestParameters());
 
 		Map<String, String> requestMetadata = ConverseApiUtils
 			.getRequestMetadata(prompt.getUserMessage().getMetadata());
@@ -775,6 +778,7 @@ public class BedrockProxyChatModel implements ChatModel {
 			ChatModelObservationContext observationContext = ChatModelObservationContext.builder()
 				.prompt(prompt)
 				.provider(AiProvider.BEDROCK_CONVERSE.value())
+				.streaming(true)
 				.build();
 
 			Observation observation = ChatModelObservationDocumentation.CHAT_MODEL_OPERATION.observation(

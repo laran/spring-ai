@@ -68,8 +68,6 @@
 		<module>vector-stores/spring-ai-couchbase-store</module>
 		<module>vector-stores/spring-ai-elasticsearch-store</module>
 		<module>vector-stores/spring-ai-gemfire-store</module>
-		<module>vector-stores/spring-ai-hanadb-store</module>
-		<module>vector-stores/spring-ai-infinispan-store</module>
 		<module>vector-stores/spring-ai-mariadb-store</module>
 		<module>vector-stores/spring-ai-milvus-store</module>
 		<module>vector-stores/spring-ai-mongodb-atlas-store</module>
@@ -135,7 +133,6 @@
 		<module>auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-couchbase</module>
 		<module>auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-elasticsearch</module>
 		<module>auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-gemfire</module>
-		<module>auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-infinispan</module>
 		<module>auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-mariadb</module>
 		<module>auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-milvus</module>
 		<module>auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-mongodb-atlas</module>
@@ -276,8 +273,8 @@
 		<spring-boot.version>4.1.0-RC1</spring-boot.version>
 		<ST4.version>4.3.4</ST4.version>
 		<azure-identity.version>1.18.2</azure-identity.version>
-		<openai-sdk.version>4.28.0</openai-sdk.version>
-		<anthropic-sdk.version>2.27.0</anthropic-sdk.version>
+		<openai-sdk.version>4.34.0</openai-sdk.version>
+		<anthropic-sdk.version>2.30.0</anthropic-sdk.version>
 		<jtokkit.version>1.1.0</jtokkit.version>
 		<kotlin.version>2.3.20</kotlin.version>
 
@@ -323,8 +320,6 @@
 		<opensearch-client.version>3.6.0</opensearch-client.version>
 		<opensearch-testcontainers.version>4.1.0</opensearch-testcontainers.version>
 		<commonmark.version>0.22.0</commonmark.version>
-		<infinispan.version>16.0.9</infinispan.version>
-		<version.protostream>6.0.6</version.protostream>
 
 		<couchbase.version>3.9.1</couchbase.version>
 		<neo4j-cypher-dsl-bom.version>2024.5.1</neo4j-cypher-dsl-bom.version>
@@ -342,9 +337,8 @@
 		<antlr.version>4.13.1</antlr.version>
 		<maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
 		<maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
-		<!-- The version (range) of the JDK we want to use to compile.
-			This is different from ${java.version} which we use as -release target. -->
-		<compiler.jdk.version>[21.0.8,)</compiler.jdk.version>
+		<!-- The version (range) of the JDK we want to use to compile -->
+		<compiler.jdk.version>[17.0.19,)</compiler.jdk.version>
 		<maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
 		<maven-failsafe-plugin.version>3.5.2</maven-failsafe-plugin.version>
 		<maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
@@ -365,8 +359,8 @@
 		<spring-javaformat-checkstyle.version>0.0.47</spring-javaformat-checkstyle.version>
 		<maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
 
-		<error-prone.version>2.46.0</error-prone.version>
-		<nullaway.version>0.13.0</nullaway.version>
+		<error-prone.version>2.42.0</error-prone.version>
+		<nullaway.version>0.13.4</nullaway.version>
 
 		<disable.checks>false</disable.checks>
 
